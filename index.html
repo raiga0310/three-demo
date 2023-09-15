@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+            #keyEvent {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 100px;
+                height: 50px;
+                background-color: #444;
+                color: #fff;
+                font-size: 30px;
+                text-align: center;
+            }
+		</style>
+	</head>
+	<body>
+		<script type="module">
+			import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+
+			// Our Javascript will go here.
+            // Three.jsのセットアップ
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // プレイヤーの宇宙船
+            const playerGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+            const playerMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+            const player = new THREE.Mesh(playerGeometry, playerMaterial);
+            scene.add(player);
+
+            const keyEvent = document.getElementById("keyEvent");
+
+            // カメラの位置設定
+            camera.position.z = 5;
+
+            // ゲームループ
+            const animate = () => {
+            requestAnimationFrame(animate);
+
+            // プレイヤーの移動
+            if (keyboard.isPressed('ArrowLeft')) {
+                player.position.x -= 0.1;
+                keyEvent.innerHTML = "←";
+            }
+            if (keyboard.isPressed('ArrowRight')) {
+                player.position.x += 0.1;
+                keyEvent.innerHTML = "→";
+            }
+            if (keyboard.isPressed('ArrowUp')) {
+                player.position.y += 0.1;
+                keyEvent.innerHTML = "↑";
+            }
+            if (keyboard.isPressed('ArrowDown')) {
+                player.position.y -= 0.1;
+                keyEvent.innerHTML = "↓";
+            }
+
+            renderer.render(scene, camera);
+            };
+
+            // キーボード入力処理
+            const keyboard = {
+            keys: {},
+            isPressed: function(key) {
+                return this.keys[key];
+            },
+            };
+
+            document.addEventListener('keydown', (event) => {
+            keyboard.keys[event.key] = true;
+            });
+
+            document.addEventListener('keyup', (event) => {
+            keyboard.keys[event.key] = false;
+            });
+
+            // ゲームループを開始
+            animate();
+
+		</script>
+        <div id = "keyEvent" style="z-index: 100;"></div>
+	</body>
+</html>
